@@ -10,7 +10,13 @@ def test_bfs_traversal():
     that all nodes are being traversed (ie. returns 
     the right number of nodes, in the right order, etc.)
     """
-    pass
+    
+    G = nx.read_adjlist('data/tiny_network.adjlist')
+    list(G.nodes)
+    list(G.edges)
+
+    
+    assert
 
 def test_bfs():
     """
@@ -23,4 +29,5 @@ def test_bfs():
     Include an additional test for nodes that are not connected 
     which should return None. 
     """
-    pass
+
+    

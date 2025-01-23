@@ -12,7 +12,7 @@ class Graph:
         """
         self.graph = nx.read_adjlist(filename, create_using=nx.DiGraph, delimiter=";")
 
-    def bfs(self, start, end=None):
+    def bfs(self, source, end=None):
         """
         TODO: write a method that performs a breadth first traversal and pathfinding on graph G
 
@@ -21,7 +21,18 @@ class Graph:
         * If there is an end node input and a path does not exist, return None
 
         """
-        return
+        Q = queue()
+        visited = [ ]
+        Q.push(source)
+        visited.append(source)
+        while Q is not empty:
+            v = Q.pop()
+            N = neighbors(v)
+            for all w in N:
+                if w not in visited:
+                    visited.append(w)
+                    Q.push(w)
+        return visited
 
 
 
