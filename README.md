@@ -1,78 +1,51 @@
 ! [BuildStatus] (https://github.com/justinsim12/HW2-BFS/workflows/HW2-BFS/badge.svg?event=push)
-# Assignment 2
-Breadth-first search
+Graph BFS Implementation
 
-# Assignment Overview
-The purpose of this assignment is to get you comfortable working with graph structures and to implement a breadth-first search function to traverse the graph and find the shortest path between nodes.
+This repository contains a Graph class with a custom breadth-first search (BFS) method designed for graph traversal and shortest-path finding using an adjacency list. The BFS method can perform a full traversal or find the shortest path between two nodes, and it gracefully handles cases where nodes are missing or not connected.
 
-# Assignment Tasks
+Overview
 
-## Coding Assessment
-In search/graph.py:
-* Define the function bfs that takes in a graph, start node, and optional node and:
-	* If no end node is provided, returns a list of nodes in order of breadth-first search traversal from the given start node
-	* If an end node is provided and a path exists, returns a list of nodes in order of the shortest path to the end node
-	* If an end node is provided and a path does not exist, returns None
-* Be sure that your code can handle possible edge cases, e.g.:
-	* running bfs traversal on an empty graph
-	* running bfs traversal on an unconnected graph
-	* running bfs from a start node that does not exist in the graph
-	* running bfs search for an end node that does not exist in the graph
-	* any other edge cases you can think of 
+The bfs method in the Graph class provides two primary functionalities:
+	•	Full BFS Traversal:
+When no target node is provided, the method returns a list of nodes in the order they are visited using BFS, starting from the source node.
+	•	Shortest Path Finding:
+When a target (end) node is specified, the method returns a list representing the shortest path from the source to the target. If no such path exists, the method returns None.
 
-In test/test_bfs.py:
-* Write unit tests for breadth-first traversal and breadth-first search 
-* You may use the two networks provided in the data folder or create your own for testing
-* Test at least 2 possible edge cases (listed above)
-* Include a test case that fails and raises an exception
+Additionally, the method checks for:
+	•	Nonexistent Source: If the source node is not present in the graph, the method returns None.
+	•	Nonexistent Target: If the target node is provided but does not exist in the graph, the method returns None (alternatively, you may choose to raise an exception based on your design).
+	•	Disconnected Nodes: If there is no path between the source and target nodes, the method returns None.
 
+How the Method Works
+	1.	Input Validation:
+The method first checks if the source node exists in the graph. If an end node is provided, it verifies its existence as well.
+	2.	BFS Traversal:
+Using a queue (deque), the method performs a standard BFS traversal from the source node.
+	•	A visited_order list keeps track of the order of nodes as they are visited.
+	•	A visited_set is used for fast membership checks.
+	•	A previous dictionary is maintained to keep track of each node’s predecessor.
+	3.	Path Reconstruction (if a target is provided):
+When the target node is reached during the BFS, the method reconstructs the shortest path by backtracking through the previous dictionary from the target to the source. The path is then reversed to present the correct order from source to target.
+	4.	Return Value:
+	•	If no target node is provided, the method returns the full BFS traversal order.
+	•	If a target is provided and reachable, the method returns the shortest path as a list.
+	•	If a target is provided but unreachable, the method returns None.
 
-## Software Development Assessment
+Example Usage
 
-* Write unit tests (in the test_bfs.py file) for your breadth first search
-* Replace these instructions with a brief description of bfs in your forked repo
-	
-* Automate Testing with a [Github Actions](https://docs.github.com/en/actions)
+from graph import Graph
 
-	See blogposts below on helping set up github actions with pytest:
-	
-	* [post 1](https://blog.dennisokeeffe.com/blog/2021-08-08-pytest-with-github-actions)
-	* [post 2](https://mattsegal.dev/pytest-on-github-actions.html)
-	* Add "! [BuildStatus] (https://github.com/ < your-github-username > /HW2-BFS/workflows/HW2-BFS/badge.svg?event=push)" (update link and remove spaces) to the beginning of your readme file
-	* Also refer to previous assignment for more in-depth help with GitHub actions
+# Initialize the graph using an adjacency list file.
+G = Graph('./data/citation_network.adjlist')
 
-	Ensure that the github actions complete the following:
-	* runs pytest
+# Perform a full BFS traversal starting from a given source node.
+bfs_order = G.bfs(source='34916529')
+print("BFS Order:", bfs_order)
 
-# Getting Started
-To get started you will need to fork this repository onto your own github. You will then work on the code base from your own repo and make changes to it in the form of commits. 
+# Find the shortest path from a source node to a target node.
+shortest_path = G.bfs(source='32025019', end='Hani Goodarzi')
+print("Shortest Path:", shortest_path)
 
-# Reference Information
-## Test Data
-Two networks have been provided in an adjacency list format readable by [networkx](https://networkx.org/), is a commonly used python package for working with graph structures. These networks consist of two types of nodes:
-* Faculty nodes 
-* Pubmed ID nodes
-
-However, since these are both stored as strings, you can treat them as equivalent nodes when traversing the graph. The first graph ("citation_network.adjlist") has nodes consisting of all BMI faculty members, the top 100 Pubmed papers *cited by* faculty, and the top 100 papers that *cite* faculty publications. Edges are directed and and edge from node A -> B indicates that node A *is cited by* node B. There are 5120 nodes and 9247 edges in this network.
-
-The second network is a subgraph of the first, consisting of only the nodes and edges along the paths between a small subset of faculty. There are 30 nodes and 64 edges.
-
-# Completing the assignment
-Make sure to push all your code to github, ensure that your unit tests are correct, and submit a link to your github through the google classroom assignment.
-
-# Grading
-
-## Code (6 points)
-* Breadth-first traversal works correctly (3)
-* Traces the path from one faculty to another (2)
-* Handles edge cases (1)
-
-## Unit tests (3 points)
-* Output traversal for mini data set (1)
-* Tests for at least two possible edge cases (1)
-* Correctly uses exceptions (1)
-
-## Style (1 points)
-* Readable code with clear comments and method descriptions
-* Updated README with description of your methods
-
+# Check behavior when nodes are not connected.
+result = G.bfs(source='34916529', end='34858697')
+print("Path does not exist:", result)
